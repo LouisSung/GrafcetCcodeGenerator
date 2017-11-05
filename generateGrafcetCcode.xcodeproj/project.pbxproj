@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F09C50F21FAF563500034DBA /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = F09C50F11FAF563500034DBA /* main.c */; };
+		F09C50FA1FAF571900034DBA /* generateGrafcet0.c in Sources */ = {isa = PBXBuildFile; fileRef = F09C50F91FAF571900034DBA /* generateGrafcet0.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		F09C50EE1FAF563500034DBA /* generateGrafcetCcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = generateGrafcetCcode; sourceTree = BUILT_PRODUCTS_DIR; };
 		F09C50F11FAF563500034DBA /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		F09C50F81FAF571900034DBA /* generateGrafcet0.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = generateGrafcet0.h; sourceTree = "<group>"; };
+		F09C50F91FAF571900034DBA /* generateGrafcet0.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = generateGrafcet0.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				F09C50F11FAF563500034DBA /* main.c */,
+				F09C50F81FAF571900034DBA /* generateGrafcet0.h */,
+				F09C50F91FAF571900034DBA /* generateGrafcet0.c */,
 			);
 			path = generateGrafcetCcode;
 			sourceTree = "<group>";
@@ -119,6 +124,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F09C50FA1FAF571900034DBA /* generateGrafcet0.c in Sources */,
 				F09C50F21FAF563500034DBA /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
