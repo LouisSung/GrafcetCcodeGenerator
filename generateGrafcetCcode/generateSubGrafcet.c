@@ -1,38 +1,40 @@
 //
-//  generateGrafcet0.c
+//  generateSubGrafcet.c
 //  generateGrafcetCcode
 //
-//  Created by LouisSung on 2017/11/1.
+//  Created by LouisSung on 2017/11/3.
 //  Copyright © 2017年 LS. All rights reserved.
 //
 #include <string.h>
-#include "generateGrafcet0.h"
+#include "generateSubGrafcet.h"
 #define MAX_PATH_LENGTH (50)
 
 static void getState(void) ;
-static void genHeaderAndStateVariable(void), genMain(void), genGrafcet(void), genAction(void) ;
+static void genHeaderAndStateVariable(void), genGrafcet(void), genAction(void) ;//$
+static void genHeaderFile(void) ;//+
 //***輸出狀態用⇩
 static void genStateCheck(const char* _EOLorEMPTY) ;
 //***輸出狀態用⇧
 
 extern const char* EOL ;
+extern char grafcetID[6] ;//+
 static const char state[36+1]="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
 static FILE *fptC=NULL ;
+static FILE *fptH=NULL ;//+
 static int howManyGrafcet=0 ;
 static char subGrafcetList[36]={} ;
 static int howManyStateOfSubGrafcet[36]={} ;
 
-void generateGrafcet0(void){
+void generateSubGrafcet(void){//$
 	extern const char outputPath[] ;
 	char cFile[MAX_PATH_LENGTH], hFile[MAX_PATH_LENGTH] ;
-	sprintf(cFile, "%sgrafcet0.c", outputPath==NULL?"":outputPath) ;
-	sprintf(hFile, "%sgrafcet0.h", outputPath==NULL?"":outputPath) ;
+	sprintf(cFile, "%sgrafcet%s.c", outputPath==NULL?"":outputPath, grafcetID) ;//$
+	sprintf(hFile, "%sgrafcet%s.h", outputPath==NULL?"":outputPath, grafcetID) ;//$
 	
 	//==============================
 	fptC=fopen(cFile, "w") ;
 	getState() ;
 	genHeaderAndStateVariable() ;
-	genMain() ;
 	genGrafcet() ;
 	genAction() ;
 	//***輸出狀態用⇩
@@ -40,10 +42,14 @@ void generateGrafcet0(void){
 	//***輸出狀態用⇧
 	fclose(fptC) ;
 	//==============================
+	fptH=fopen(hFile, "w") ;//+
+	genHeaderFile() ;//+
+	fclose(fptH) ;//+
+	//==============================
 }
 
 static void getState(){
-	printf("G0有幾個狀態？(2~36)： ") ;
+	printf("G%s有幾個狀態？(2~36)： ", grafcetID) ;//$
 	scanf("%d", &howManyGrafcet) ;
 	printf("哪些狀態有subGrafcet？(狀態之間不需隔開)([1-9A-Z]+ | no)： ") ;
 	scanf("%s", subGrafcetList) ;
@@ -55,60 +61,54 @@ static void getState(){
 
 static void genHeaderAndStateVariable(){
 	//---引入標頭檔
-	fprintf(fptC, "#include <stdio.h>%s", EOL) ;
-	for(int i=0; i<strlen(subGrafcetList); ++i){			//_include"subGrafcets.h"
-		fprintf(fptC, "#include \"grafcet%c.h\"%s", subGrafcetList[i], EOL) ;}
+	fprintf(fptC, "#include \"grafcet%s.h\"%s", grafcetID, EOL) ;//$
+	for(int i=0; i<strlen(subGrafcetList); ++i){			//_include"subSubGrafcets.h"
+		fprintf(fptC, "#include \"grafcet%s%c.h\"%s", grafcetID, subGrafcetList[i], EOL) ;}//$
 	
 	//---函式宣告
-	fprintf(fptC, "%s", EOL) ;			//_grafcet0()、action0()的原型宣告
-	fprintf(fptC, "void grafcet0(void) ;%sstatic void action0(void) ;%s", EOL, EOL) ;
+	fprintf(fptC, "%s", EOL) ;			//_grafcet#()、action#()的原型宣告
+	fprintf(fptC, "static void action%s(void) ;%s", grafcetID, EOL) ;//$
 	
 	//***輸出狀態用⇩
 	fprintf(fptC, "//***輸出狀態用⇩%sstatic void stateCheck(void) ;%s//***輸出狀態用⇧%s", EOL, EOL, EOL) ;
 	//***輸出狀態用⇧
 	
-	//---Grafcet0狀態變數宣告
+	//---Grafcet#狀態變數宣告
 	fprintf(fptC, "%s", EOL) ;
-	fprintf(fptC, "int x0=1, ") ;			//_G0狀態變數宣告
-	for(int i=1; i<howManyGrafcet; ++i){			//_G1~Glast狀態變數宣告
-		fprintf(fptC, "x%c=0%s", state[i], i==howManyGrafcet-1?" ;":", ") ;}
+	fprintf(fptC, "extern int x%s ;%s", grafcetID, EOL) ;//+			//_引入自己的狀態變數
+	fprintf(fptC, "int x%s0=1, ", grafcetID) ;//$			//_G#0狀態變數宣告
+	for(int i=1; i<howManyGrafcet; ++i){			//_G#1~G#last狀態變數宣告
+		fprintf(fptC, "x%s%c=0%s", grafcetID, state[i], i==howManyGrafcet-1?" ;":", ") ;}//$
 	fprintf(fptC, "%s", EOL) ;
 	
-	//---subGrafcet狀態變數宣告
+	//---subSubGrafcet狀態變數宣告
 	if(strlen(subGrafcetList)!=0){
 		printf("\n===\n") ;}
 	for(int i=0; i<strlen(subGrafcetList); ++i){
-		printf("G%c的subGrafcet有幾個狀態？(2~36)： ", subGrafcetList[i]) ;
+		printf("G%s%c的subGrafcet有幾個狀態？(2~36)： ", grafcetID, subGrafcetList[i]) ;//$
 		int numberOfSubGrafcet=0 ;
-		if('0'<=subGrafcetList[i] && subGrafcetList[i]<='9'){			//_把subGrafcet的state換成編號
+		if('0'<=subGrafcetList[i] && subGrafcetList[i]<='9'){			//_把subSubGrafcet的state換成編號
 			numberOfSubGrafcet=subGrafcetList[i]-'0' ;}			//_'0'->0
 		else if('A'<=subGrafcetList[i] && subGrafcetList[i]<='Z'){
 			numberOfSubGrafcet=subGrafcetList[i]-'A'+10 ;}		//_'A'->10
-		scanf("%d", &howManyStateOfSubGrafcet[numberOfSubGrafcet]) ;			//_紀錄哪些有subGrafcet
+		scanf("%d", &howManyStateOfSubGrafcet[numberOfSubGrafcet]) ;			//_紀錄哪些有subSubGrafcet
 		fprintf(fptC, "extern int ") ;
 		for(int j=0; j<howManyStateOfSubGrafcet[numberOfSubGrafcet]; ++j){
-			//fprintf(fptC, "x%c%c=%c%s", state[numberOfSubGrafcet], state[j], j==0?'1':'0', j==howManyStateOfSubGrafcet[numberOfSubGrafcet]-1?" ;":", ") ;}
-			fprintf(fptC, "x%c%c%s", state[numberOfSubGrafcet], state[j], j==howManyStateOfSubGrafcet[numberOfSubGrafcet]-1?" ;":", ") ;}
+			fprintf(fptC, "x%s%c%c%s", grafcetID, state[numberOfSubGrafcet], state[j], j==howManyStateOfSubGrafcet[numberOfSubGrafcet]-1?" ;":", ") ;}//$
 		fprintf(fptC, "%s", EOL) ;
 	}
 	fseek(fptC, -(strlen(EOL)), SEEK_END) ;			//_移除最後的空白行
-}
-
-static void genMain(){
-	//---產生main()
-	fprintf(fptC, "%s%s", EOL, EOL) ;
-	fprintf(fptC,"int main(){%s\twhile(1){%s\t\tgrafcet0() ;}%s}", EOL, EOL, EOL) ;
 }
 
 static void genGrafcet(){
 	//_Gi=現在狀態, Gj=下一狀態, Gk=其他個別狀態, Gns=上下多狀態, []*t=[動作]做t次
 	//---產生grafcet()
 	fprintf(fptC, "%s%s", EOL, EOL) ;
-	fprintf(fptC, "void grafcet0(){%s", EOL) ;
+	fprintf(fptC, "void grafcet%s(){%s", grafcetID, EOL) ;//$
 	
 	//---產生狀態轉移條件
 	enum translationType{SINGLE=1, D_AND, D_OR, C_AND, C_OR}previousType=0, currentType=0 ;
-	const char tType[6][7]={"", "SINGLE", "D_AND", "D_OR", "C_AND", "C_OR"} ;			//`enum->string
+	const char tType[6][7]={"","SINGLE", "D_AND", "D_OR", "C_AND", "C_OR"} ;			//`enum->string
 	char translationTo[36]={} ;
 	char cAndList[36][36]={} ;
 	unsigned char remindConvergenceFlag=0 ;
@@ -121,22 +121,22 @@ static void genGrafcet(){
 				fprintf(fptC, "%s/**%s**/%s", i==0?"":EOL, tType[currentType], EOL) ;}			//`分隔不同類型區塊
 			fprintf(fptC, "\t%s(", i==0?"if":"else if") ;			//_第一行if, 其他行else if
 			for(int j=0; j<strlen(cAndList[i]); ++j){				//_if(xi==1&&xns==1...)
-				fprintf(fptC, "x%c==1%s", cAndList[i][j], j==strlen(cAndList[i])-1?"":"&&") ;}
+				fprintf(fptC, "x%s%c==1%s", grafcetID, cAndList[i][j], j==strlen(cAndList[i])-1?"":"&&") ;}//$
 			fprintf(fptC, "/*&& (|__C-AND__") ;
-			printf("＊C_AND：") ;
+			printf("C_AND：") ;
 			for(int j=0; j<strlen(cAndList[i]); ++j){
-				fprintf(fptC, "G%c%s", cAndList[i][j], j==strlen(cAndList[i])-1?"":",") ;
-				printf("G%c%s", cAndList[i][j], j==strlen(cAndList[i])-1?"":",") ;
+				fprintf(fptC, "G%s%c%s", grafcetID, cAndList[i][j], j==strlen(cAndList[i])-1?"":",") ;//$
+				printf("G%s%c%s", grafcetID, cAndList[i][j], j==strlen(cAndList[i])-1?"":",") ;//$
 			}
-			fprintf(fptC, "→G%c其他條件__|)*/){", state[i]) ;				//_Gns...->Gi
-			printf("收斂到G%c\n", state[i]) ;
+			fprintf(fptC, "→G%s%c其他條件__|)*/){", grafcetID, state[i]) ;//$				//_Gns...->Gi
+			printf("收斂到G%s%c\n", grafcetID, state[i]) ;//$
 			for(int j=0; j<strlen(cAndList[i]); ++j){			//_{xns=0...,xi=1}
-				fprintf(fptC, "x%c=0; ", cAndList[i][j]) ;}
-			fprintf(fptC, "x%c=1 ;}%s", state[i], EOL) ;
+				fprintf(fptC, "x%s%c=0; ", grafcetID, cAndList[i][j]) ;}//$
+			fprintf(fptC, "x%s%c=1 ;}%s", grafcetID, state[i], EOL) ;//$
 		}
 		
 		//---確認Gi狀態(SINGLE/D_AND/D_OR/C_AND/C_OR)
-		printf("G%c會轉移到哪些狀態？(狀態之間不需隔開)(%s[0-9A-Z]+)： ", state[i], remindConvergenceFlag==0?"":"(and|or)?") ;			//_曾出現D_AND或D_OR, 新增前綴選項可供輸入
+		printf("G%s%c會轉移到哪些狀態？(狀態之間不需隔開)(%s[0-9A-Z]+)： ", grafcetID, state[i], remindConvergenceFlag==0?"":"(and|or)?") ;//$			//_曾出現D_AND或D_OR, 新增前綴選項可供輸入
 		scanf("%s", translationTo) ;
 		char divergenceType[4]={} ;			//_用來記錄是D_AND或D_OR
 		if(strlen(translationTo)>1){
@@ -155,12 +155,12 @@ static void genGrafcet(){
 			if(currentType!=previousType){
 				fprintf(fptC, "%s/**%s**/%s", i==0?"":EOL, tType[currentType], EOL) ;}		//`
 			fprintf(fptC, "\t%s", i==0?"if":"else if") ;		//_if(xi==1)
-			fprintf(fptC, "(x%c==1/*&& (|__D-AND__G%c→", state[i], state[i]) ;
+			fprintf(fptC, "(x%s%c==1/*&& (|__D-AND__G%s%c→", grafcetID, state[i], grafcetID, state[i]) ;//$
 			for(int j=0; j<strlen(translationTo); ++j){		//_Gi->Gns...
-				fprintf(fptC, "G%c%s", translationTo[j], j==strlen(translationTo)-1?"":",") ;}
-			fprintf(fptC, "其他條件__|)*/){x%c=0; ", state[i]) ;
+				fprintf(fptC, "G%s%c%s", grafcetID, translationTo[j], j==strlen(translationTo)-1?"":",") ;}//$
+			fprintf(fptC, "其他條件__|)*/){x%s%c=0; ", grafcetID, state[i]) ;//$
 			for(int j=0; j<strlen(translationTo); ++j){			//_{xi=0, xns=1...}
-				fprintf(fptC, "x%c=1%s", translationTo[j], j==strlen(translationTo)-1?" ;":"; ") ;}
+				fprintf(fptC, "x%s%c=1%s", grafcetID, translationTo[j], j==strlen(translationTo)-1?" ;":"; ") ;}//$
 			fprintf(fptC, "}%s", EOL) ;
 		}
 		
@@ -171,7 +171,7 @@ static void genGrafcet(){
 				fprintf(fptC, "%s/**%s**/%s", i==0?"":EOL, tType[currentType], EOL) ;}			//`
 			for(int j=0; j<strlen(translationTo); ++j){			//_if(xi==1)
 				fprintf(fptC, "\t%s", i==0&&j==0?"if":"else if") ;			//_[Gi->Gj]*t
-				fprintf(fptC, "(x%c==1/*&& (|__D-OR__G%c→G%c其他條件__|)*/){x%c=0; x%c=1 ;}%s", state[i], state[i], translationTo[j], state[i], translationTo[j], EOL) ;			//_[{xi=0; xj=1}]*t
+				fprintf(fptC, "(x%s%c==1/*&& (|__D-OR__G%s%c→G%s%c其他條件__|)*/){x%s%c=0; x%s%c=1 ;}%s", grafcetID, state[i], grafcetID, state[i], grafcetID, translationTo[j], grafcetID, state[i], grafcetID, translationTo[j], EOL) ;//$			//_[{xi=0; xj=1}]*t
 			}
 		}
 		
@@ -181,7 +181,7 @@ static void genGrafcet(){
 			if(currentType!=previousType){
 				fprintf(fptC, "%s/**%s**/%s", i==0?"":EOL, tType[currentType], EOL) ;}			//`
 			fprintf(fptC, "\t%s", i==0?"if":"else if") ;			//_Gj->Gi
-			fprintf(fptC, "(x%c==1/*&& (|__C-OR__G%c→G%c其他條件__|)*/){x%c=0; x%c=1 ;}%s", state[i], state[i], translationTo[2], state[i], translationTo[2], EOL) ;			//_{xj=0, xi=1}
+			fprintf(fptC, "(x%s%c==1/*&& (|__C-OR__G%s%c→G%s%c其他條件__|)*/){x%s%c=0; x%s%c=1 ;}%s", grafcetID, state[i], grafcetID, state[i], grafcetID, translationTo[2], grafcetID, state[i], grafcetID, translationTo[2], EOL) ;//$			//_{xj=0, xi=1}
 		}
 		
 		//---紀錄C_AND:(僅建表)多個Gns收斂至Gi
@@ -200,7 +200,7 @@ static void genGrafcet(){
 			if(currentType!=previousType){
 				fprintf(fptC, "%s/**%s**/%s", i==0?"":EOL, tType[currentType], EOL) ;}			//`
 			fprintf(fptC, "\t%s", i==0?"if":"else if") ;		//_Gi->Gj
-			fprintf(fptC, "(x%c==1/*&& (|__SINGLE__G%c→G%c其他條件__|)*/){x%c=0; x%c=1 ;}%s", state[i], state[i], translationTo[0], state[i], translationTo[0], EOL) ;			//_{xi=0, xj=1}
+			fprintf(fptC, "(x%s%c==1/*&& (|__SINGLE__G%s%c→G%s%c其他條件__|)*/){x%s%c=0; x%s%c=1 ;}%s", grafcetID, state[i], grafcetID, state[i], grafcetID, translationTo[0], grafcetID, state[i], grafcetID, translationTo[0], EOL) ;//$			//_{xi=0, xj=1}
 		}
 		previousType=currentType ;
 	}
@@ -209,18 +209,18 @@ static void genGrafcet(){
 	if(strlen(cAndList[0])!=0){			//_重做一次C_AND, listIndex=0
 		fprintf(fptC, "\telse if(") ;
 		for(int i=0; i<strlen(cAndList[0]); ++i){
-			fprintf(fptC, "x%c==1%s", cAndList[0][i], i==strlen(cAndList[0])-1?"":"&&") ;}
+			fprintf(fptC, "x%s%c==1%s", grafcetID, cAndList[0][i], i==strlen(cAndList[0])-1?"":"&&") ;}//$
 		fprintf(fptC, "/*&& (|__C-AND__") ;
-		printf("＊C_AND：") ;
+		printf("C_AND：") ;
 		for(int i=0; i<strlen(cAndList[0]); ++i){
-			fprintf(fptC, "G%c%s", cAndList[0][i], i==strlen(cAndList[0])-1?"":",") ;
-			printf("G%c%s", cAndList[0][i], i==strlen(cAndList[0])-1?"":",") ;
+			fprintf(fptC, "G%s%c%s", grafcetID, cAndList[0][i], i==strlen(cAndList[0])-1?"":",") ;//$
+			printf("G%s%c%s", grafcetID, cAndList[0][i], i==strlen(cAndList[0])-1?"":",") ;//$
 		}
-		fprintf(fptC, "→G0其他條件__|)*/){") ;
-		printf("收斂到G0\n") ;
+		fprintf(fptC, "→G%s0其他條件__|)*/){", grafcetID) ;//$
+		printf("收斂到G%s0\n", grafcetID) ;//$
 		for(int i=0; i<strlen(cAndList[0]); ++i){
-			fprintf(fptC, "x%c=0; ", cAndList[0][i]) ;}
-		fprintf(fptC, "x0=1 ;}%s", EOL) ;
+			fprintf(fptC, "x%s%c=0; ", grafcetID, cAndList[0][i]) ;}//$
+		fprintf(fptC, "x%s0=1 ;}%s", grafcetID, EOL) ;//$
 	}
 	
 	//***輸出狀態用⇩
@@ -228,15 +228,15 @@ static void genGrafcet(){
 	//***輸出狀態用⇧
 	
 	//---產生ActionFunctionCall
-	fprintf(fptC, "%s\taction0() ;%s}", EOL, EOL) ;
+	fprintf(fptC, "%s\taction%s() ;%s}", EOL, grafcetID, EOL) ;//$
 }
 
 static void genAction() {
 	//---產生action()
 	fprintf(fptC, "%s%s", EOL, EOL) ;
-	fprintf(fptC, "static void action0(){%s", EOL) ;
+	fprintf(fptC, "static void action%s(){%s", grafcetID, EOL) ;//$
 	for(int i=0; i<howManyGrafcet; ++i){
-		fprintf(fptC, "\tif(x%c==1){/*|__G%c動作__|*/}%s", state[i], state[i], EOL) ;}
+		fprintf(fptC, "\tif(x%s%c==1){/*|__G%s%c動作__|*/}%s", grafcetID, state[i], grafcetID, state[i], EOL) ;}//$
 	fprintf(fptC, "}") ;
 }
 
@@ -245,11 +245,17 @@ static void genStateCheck(const char* EOLorEMPTY){
 	//---產生stateCheck()
 	unsigned char eolFlag=!strcmp(EOLorEMPTY, EOL) ;			//_紀錄換行與否
 	fprintf(fptC, "%s%s", EOL, EOL) ;
-	fprintf(fptC, "//***輸出狀態用⇩%sstatic void stateCheck(){%s\tprintf(\"＊G0狀態： _\") ;%s", EOL, EOL, EOL) ;
+	fprintf(fptC, "//***輸出狀態用⇩%sstatic void stateCheck(){%s\tprintf(\"－G%s狀態： _\") ;%s", EOL, EOL, grafcetID, EOL) ;//$
 	for(int i=0; i<howManyGrafcet; ++i){			//_G0各狀態
 		if(eolFlag==1 || i==0){			//_(第一行/不換行時各if之間)的空白
 			fprintf(fptC, "\t") ;}
-		fprintf(fptC, "if(x%c==1){printf(\"_x%c_\") ;}%s", state[i], state[i], EOLorEMPTY) ;
+		fprintf(fptC, "if(x%s%c==1){printf(\"_", grafcetID, state[i]) ;//$
+		for(int j=0; j<strlen(grafcetID); ++j){//+
+			fprintf(fptC,"|") ;}
+		fprintf(fptC, "x%s%c", grafcetID, state[i]) ;//$
+		for(int j=0; j<strlen(grafcetID); ++j){//+
+			fprintf(fptC,"|") ;}
+		fprintf(fptC, "_\") ;}%s", EOLorEMPTY) ;//$
 	}
 	fprintf(fptC, "%s", EOL);			//_每一組之間換行
 	for(int i=0; i<strlen(subGrafcetList); ++i){		//_subGrafcet各狀態
@@ -259,7 +265,13 @@ static void genStateCheck(const char* EOLorEMPTY){
 		for(int j=0; j<howManyStateOfSubGrafcet[numOfSG]; ++j){
 			if(eolFlag==1){
 				fprintf(fptC, "\t") ;}
-			fprintf(fptC, "if(x%c%c==1){printf(\"_|x%c%c|_\") ;}%s", subGrafcetList[i], state[j], subGrafcetList[i], state[j], EOLorEMPTY) ;
+			fprintf(fptC, "if(x%s%c%c==1){printf(\"_", grafcetID, subGrafcetList[i], state[j]) ;//$
+			for(int j=0; j<strlen(grafcetID)+1; ++j){//+
+				fprintf(fptC,"|") ;}
+			fprintf(fptC, "x%s%c%c_", grafcetID, subGrafcetList[i], state[j]) ;//$
+			for(int j=0; j<strlen(grafcetID)+1; ++j){//+
+				fprintf(fptC,"|") ;}
+			fprintf(fptC,"\") ;}%s", EOLorEMPTY) ;//$
 		}
 		fprintf(fptC, "%s", EOL) ;
 	}
@@ -268,3 +280,7 @@ static void genStateCheck(const char* EOLorEMPTY){
 	fprintf(fptC, "\tprintf(\"_\\n\") ;%s}%s//***輸出狀態用⇧", EOL, EOL) ;
 }
 //***輸出狀態用⇧
+
+void genHeaderFile(void){//+
+	fprintf(fptH, "#ifndef grafcet%s_h%s#define grafcet%s_h%s%s#include <stdio.h>%svoid grafcet%s(void) ;%s#endif /* grafcet%s_h */", grafcetID, EOL, grafcetID, EOL, EOL, EOL, grafcetID, EOL, grafcetID) ;//+
+}

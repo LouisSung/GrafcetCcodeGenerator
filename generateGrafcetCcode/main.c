@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 #include "generateGrafcet0.h"
-//#include "generateSubGrafcet.h"
+#include "generateSubGrafcet.h"
 const char* EOL="\r\n" ;
 const char outputPath[]="" ;
 char grafcetID[5+1] ;			//_Grafcet最深層數(5層)+1
@@ -18,7 +18,7 @@ int main(int argc, const char * argv[]) {
 	scanf("%s", grafcetID) ;
 	if(grafcetID[0]=='0'){
 		generateGrafcet0() ;}
-//	else{
-//		generateSubGrafcet() ;}
+	else{
+		generateSubGrafcet() ;}
 	return 0 ;
 }
