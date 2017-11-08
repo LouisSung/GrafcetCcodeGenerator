@@ -54,6 +54,9 @@ static void getState(){
 }
 
 static void genHeaderAndStateVariable(){
+	//---版權聲明
+	fprintf(fptC, "//_auto created by LS' GrafcetCcodeGenerator ฅ• ω •ฅ%s", EOL) ;
+	
 	//---引入標頭檔
 	fprintf(fptC, "#include <stdio.h>%s", EOL) ;
 	for(int i=0; i<strlen(subGrafcetList); ++i){			//_include"subGrafcets.h"
