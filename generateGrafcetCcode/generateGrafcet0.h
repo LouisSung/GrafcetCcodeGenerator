@@ -11,4 +11,5 @@
 
 #include <stdio.h>
 void generateGrafcet0(void) ;
+
 #endif /* generateGrafcet0_h */
