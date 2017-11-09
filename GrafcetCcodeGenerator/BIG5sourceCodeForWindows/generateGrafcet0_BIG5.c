@@ -1,19 +1,19 @@
-//  à¸…â€¢ Ï‰ â€¢à¸… å–µ~
+//
 //  generateGrafcet0.c
 //  generateGrafcetCcode
 //
 //  Created by LouisSung on 2017/11/1.
-//  Copyright Â© 2017å¹´ LS. All rights reserved.
+//  Copyright c 2017¦~ LS. All rights reserved.
 //
 #include <string.h>
-#include "generateGrafcet0.h"
+#include "generateGrafcet0_BIG5.h"
 #define MAX_PATH_LENGTH (50)
 
 static void getState(void) ;
 static void genHeaderAndStateVariable(void), genMain(void), genGrafcet(void), genAction(void) ;
-//***è¼¸å‡ºç‹€æ…‹ç”¨â‡©
+//***¿é¥Xª¬ºA¥Î¡õ
 static void genStateCheck(const char* _EOLorEMPTY) ;
-//***è¼¸å‡ºç‹€æ…‹ç”¨â‡§
+//***¿é¥Xª¬ºA¥Î¡ô
 
 extern const char* EOL ;
 static const char state[36+1]="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
@@ -35,17 +35,17 @@ void generateGrafcet0(void){
 	genMain() ;
 	genGrafcet() ;
 	genAction() ;
-	//***è¼¸å‡ºç‹€æ…‹ç”¨â‡©
+	//***¿é¥Xª¬ºA¥Î¡õ
 	genStateCheck("") ;
-	//***è¼¸å‡ºç‹€æ…‹ç”¨â‡§
+	//***¿é¥Xª¬ºA¥Î¡ô
 	fclose(fptC) ;
 	//==============================
 }
 
 static void getState(){
-	printf("G0æœ‰å¹¾å€‹ç‹€æ…‹ï¼Ÿ(2~36)ï¼š ") ;
+	printf("G0¦³´X­Óª¬ºA¡H(2~36)¡G ") ;
 	scanf("%d", &howManyGrafcet) ;
-	printf("å“ªäº›ç‹€æ…‹æœ‰subGrafcetï¼Ÿ(ç‹€æ…‹ä¹‹é–“ä¸éœ€éš”é–‹)([1-9A-Z]+ | no)ï¼š ") ;
+	printf("­ş¨Çª¬ºA¦³subGrafcet¡H(ª¬ºA¤§¶¡¤£»İ¹j¶})([1-9A-Z]+ | no)¡G ") ;
 	scanf("%s", subGrafcetList) ;
 	if(subGrafcetList[0]=='n' && subGrafcetList[1]=='o'){
 		subGrafcetList[0]='\0' ;
@@ -54,57 +54,57 @@ static void getState(){
 }
 
 static void genHeaderAndStateVariable(){
-	//---ç‰ˆæ¬Šè²æ˜
-	fprintf(fptC, "//_auto created by LS' GrafcetCcodeGenerator à¸…â€¢ Ï‰ â€¢à¸…%s", EOL) ;
+	//---ª©ÅvÁn©ú
+	fprintf(fptC, "//_auto created by LS' GrafcetCcodeGenerator ?¡E £s ¡E?%s", EOL) ;
 	
-	//---å¼•å…¥æ¨™é ­æª”
+	//---¤Ş¤J¼ĞÀYÀÉ
 	fprintf(fptC, "#include <stdio.h>%s", EOL) ;
 	for(int i=0; i<strlen(subGrafcetList); ++i){			//_include"subGrafcets.h"
 		fprintf(fptC, "#include \"grafcet%c.h\"%s", subGrafcetList[i], EOL) ;}
 	
-	//---å‡½å¼å®£å‘Š
-	fprintf(fptC, "%s", EOL) ;			//_grafcet0()ã€action0()çš„åŸå‹å®£å‘Š
+	//---¨ç¦¡«Å§i
+	fprintf(fptC, "%s", EOL) ;			//_grafcet0()¡Baction0()ªº­ì«¬«Å§i
 	fprintf(fptC, "void grafcet0(void) ;%sstatic void action0(void) ;%s", EOL, EOL) ;
 	
-	//***è¼¸å‡ºç‹€æ…‹ç”¨â‡©
-	fprintf(fptC, "//***è¼¸å‡ºç‹€æ…‹ç”¨â‡©%sstatic void stateCheck(void) ;%s//***è¼¸å‡ºç‹€æ…‹ç”¨â‡§%s", EOL, EOL, EOL) ;
-	//***è¼¸å‡ºç‹€æ…‹ç”¨â‡§
+	//***¿é¥Xª¬ºA¥Î¡õ
+	fprintf(fptC, "//***¿é¥Xª¬ºA¥Î¡õ%sstatic void stateCheck(void) ;%s//***¿é¥Xª¬ºA¥Î¡ô%s", EOL, EOL, EOL) ;
+	//***¿é¥Xª¬ºA¥Î¡ô
 	
-	//---Grafcet0ç‹€æ…‹è®Šæ•¸å®£å‘Š
+	//---Grafcet0ª¬ºAÅÜ¼Æ«Å§i
 	fprintf(fptC, "%s", EOL) ;
-	fprintf(fptC, "int x0=1, ") ;			//_G0ç‹€æ…‹è®Šæ•¸å®£å‘Š
-	for(int i=1; i<howManyGrafcet; ++i){			//_G1~Glastç‹€æ…‹è®Šæ•¸å®£å‘Š
+	fprintf(fptC, "int x0=1, ") ;			//_G0ª¬ºAÅÜ¼Æ«Å§i
+	for(int i=1; i<howManyGrafcet; ++i){			//_G1~Glastª¬ºAÅÜ¼Æ«Å§i
 		fprintf(fptC, "x%c=0%s", state[i], i==howManyGrafcet-1?" ;":", ") ;}
 	fprintf(fptC, "%s", EOL) ;
 	
-	//---subGrafcetç‹€æ…‹è®Šæ•¸å®£å‘Š
+	//---subGrafcetª¬ºAÅÜ¼Æ«Å§i
 	if(strlen(subGrafcetList)!=0){
 		printf("\n===\n") ;}
 	for(int i=0; i<strlen(subGrafcetList); ++i){
-		printf("G%c çš„subGrafcetæœ‰å¹¾å€‹ç‹€æ…‹ï¼Ÿ(2~36)ï¼š ", subGrafcetList[i]) ;
-		int indexOfSubGrafcet=subGrafcetList[i]<='9'?subGrafcetList[i]-'0':subGrafcetList[i]-'A'+10 ;			//_æŠŠsubGrafcetçš„stateæ›æˆç·¨è™Ÿ
-		scanf("%d", &howManyStateOfSubGrafcet[indexOfSubGrafcet]) ;			//_ç´€éŒ„å“ªäº›æœ‰subGrafcet
+		printf("G%c ªºsubGrafcet¦³´X­Óª¬ºA¡H(2~36)¡G ", subGrafcetList[i]) ;
+		int indexOfSubGrafcet=subGrafcetList[i]<='9'?subGrafcetList[i]-'0':subGrafcetList[i]-'A'+10 ;			//_§âsubGrafcetªºstate´«¦¨½s¸¹
+		scanf("%d", &howManyStateOfSubGrafcet[indexOfSubGrafcet]) ;			//_¬ö¿ı­ş¨Ç¦³subGrafcet
 		fprintf(fptC, "extern int ") ;
 		for(int j=0; j<howManyStateOfSubGrafcet[indexOfSubGrafcet]; ++j){
 			fprintf(fptC, "x%c%c%s", state[indexOfSubGrafcet], state[j], j==howManyStateOfSubGrafcet[indexOfSubGrafcet]-1?" ;":", ") ;}
 		fprintf(fptC, "%s", EOL) ;
 	}
-	fseek(fptC, -(strlen(EOL)), SEEK_END) ;			//_ç§»é™¤æœ€å¾Œçš„ç©ºç™½è¡Œ
+	fseek(fptC, -(strlen(EOL)), SEEK_END) ;			//_²¾°£³Ì«áªºªÅ¥Õ¦æ
 }
 
 static void genMain(){
-	//---ç”¢ç”Ÿmain()
+	//---²£¥Ímain()
 	fprintf(fptC, "%s%s", EOL, EOL) ;
 	fprintf(fptC,"int main(){%s\twhile(1){%s\t\tgrafcet0() ;}%s}", EOL, EOL, EOL) ;
 }
 
 static void genGrafcet(){
-	//_Gi=ç¾åœ¨ç‹€æ…‹, Gj=ä¸‹ä¸€ç‹€æ…‹, Gk=å…¶ä»–å€‹åˆ¥ç‹€æ…‹, Gns=ä¸Šä¸‹å¤šç‹€æ…‹, []*t=[å‹•ä½œ]åštæ¬¡
-	//---ç”¢ç”Ÿgrafcet()
+	//_Gi=²{¦bª¬ºA, Gj=¤U¤@ª¬ºA, Gk=¨ä¥L­Ó§Oª¬ºA, Gns=¤W¤U¦hª¬ºA, []*t=[°Ê§@]°µt¦¸
+	//---²£¥Ígrafcet()
 	fprintf(fptC, "%s%s", EOL, EOL) ;
 	fprintf(fptC, "void grafcet0(){%s", EOL) ;
 	
-	//---ç”¢ç”Ÿç‹€æ…‹è½‰ç§»æ¢ä»¶
+	//---²£¥Íª¬ºAÂà²¾±ø¥ó
 	enum translationType{SINGLE=1, D_AND, D_OR, C_AND, C_OR}previousType=0, currentType=0 ;
 	const char tType[6][7]={"", "SINGLE", "D_AND", "D_OR", "C_AND", "C_OR"} ;			//`enum->string
 	char translationTo[36]={} ;
@@ -112,50 +112,50 @@ static void genGrafcet(){
 	unsigned char remindConvergenceFlag=0 ;
 	printf("\n===\n") ;
 	for(int i=0; i<howManyGrafcet; ++i){
-		//---C_AND:å¤šå€‹Gnæ”¶æ–‚è‡³Gi
+		//---C_AND:¦h­ÓGn¦¬ÀÄ¦ÜGi
 		if(strlen(cAndList[i])!=0){
 			currentType=C_AND ;
 			if(currentType!=previousType){
-				fprintf(fptC, "%s/**%s**/%s", i==0?"":EOL, tType[currentType], EOL) ;}			//`åˆ†éš”ä¸åŒé¡å‹å€å¡Š
-			fprintf(fptC, "\t%s(", i==0?"if":"else if") ;			//_ç¬¬ä¸€è¡Œif, å…¶ä»–è¡Œelse if
+				fprintf(fptC, "%s/**%s**/%s", i==0?"":EOL, tType[currentType], EOL) ;}			//`¤À¹j¤£¦PÃş«¬°Ï¶ô
+			fprintf(fptC, "\t%s(", i==0?"if":"else if") ;			//_²Ä¤@¦æif, ¨ä¥L¦æelse if
 			for(int j=0; j<strlen(cAndList[i]); ++j){				//_if(xi==1&&xns==1...)
 				fprintf(fptC, "x%c==1%s", cAndList[i][j], j==strlen(cAndList[i])-1?"":"&&") ;
 				int indexOfCAndList=(cAndList[i][j]<='9'?cAndList[i][j]-'0':cAndList[i][j]-'A'+10) ;
-				if(howManyStateOfSubGrafcet[indexOfCAndList]!=0){			//_ä¸‹å±¤subGrafcetå®Œæˆå¾Œ, ä¸Šå±¤æ‰è½‰ç§»
+				if(howManyStateOfSubGrafcet[indexOfCAndList]!=0){			//_¤U¼hsubGrafcet§¹¦¨«á, ¤W¼h¤~Âà²¾
 					fprintf(fptC, "%sx%c%c==1%s", j==strlen(cAndList[i])-1?"&&":"", state[indexOfCAndList], state[howManyStateOfSubGrafcet[indexOfCAndList]-1], j==strlen(cAndList[i])-1?"":"&&") ;}
 			}
 			fprintf(fptC, "/*&& (|__C-AND__") ;
-			printf("ï¼ŠC_ANDï¼š") ;
+			printf("¡¯C_AND¡G") ;
 			for(int j=0; j<strlen(cAndList[i]); ++j){
 				fprintf(fptC, "G%c%s", cAndList[i][j], j==strlen(cAndList[i])-1?"":",") ;
 				printf("G%c%s", cAndList[i][j], j==strlen(cAndList[i])-1?"":",") ;
 			}
-			fprintf(fptC, "â†’G%cå…¶ä»–æ¢ä»¶__|)*/){", state[i]) ;				//_Gns...->Gi
-			printf("æ”¶æ–‚åˆ°G%c\n", state[i]) ;
+			fprintf(fptC, "¡÷G%c¨ä¥L±ø¥ó__|)*/){", state[i]) ;				//_Gns...->Gi
+			printf("¦¬ÀÄ¨ìG%c\n", state[i]) ;
 			for(int j=0; j<strlen(cAndList[i]); ++j){			//_{xns=0...,xi=1}
 				fprintf(fptC, "x%c=0; ", cAndList[i][j]) ;
 				int indexOfCAndList=(cAndList[i][j]<='9'?cAndList[i][j]-'0':cAndList[i][j]-'A'+10) ;
-				if(howManyStateOfSubGrafcet[indexOfCAndList]!=0){			//_ä¸Šå±¤Grafcetæ§åˆ¶ä¸‹å±¤è½‰ç§»
+				if(howManyStateOfSubGrafcet[indexOfCAndList]!=0){			//_¤W¼hGrafcet±±¨î¤U¼hÂà²¾
 					fprintf(fptC, "x%c%c=0; x%c0=1; ", state[indexOfCAndList], state[howManyStateOfSubGrafcet[indexOfCAndList]-1], state[indexOfCAndList]) ;}
 			}
-			fprintf(fptC, "x%c=1 ;%s}%s", state[i], i==0?"/*G0åˆå§‹åŒ–å…§å®¹*/":"", EOL) ;
+			fprintf(fptC, "x%c=1 ;%s}%s", state[i], i==0?"/*G0ªì©l¤Æ¤º®e*/":"", EOL) ;
 		}
 		
-		//---ç¢ºèªGiç‹€æ…‹(SINGLE/D_AND/D_OR/C_AND/C_OR)
-		printf("G%cæœƒè½‰ç§»åˆ°å“ªäº›ç‹€æ…‹ï¼Ÿ(ç‹€æ…‹ä¹‹é–“ä¸éœ€éš”é–‹)(%s[0-9A-Z]+)ï¼š ", state[i], remindConvergenceFlag==0?"":"(and|or)?") ;			//_æ›¾å‡ºç¾D_ANDæˆ–D_OR, æ–°å¢å‰ç¶´é¸é …å¯ä¾›è¼¸å…¥
+		//---½T»{Giª¬ºA(SINGLE/D_AND/D_OR/C_AND/C_OR)
+		printf("G%c·|Âà²¾¨ì­ş¨Çª¬ºA¡H(ª¬ºA¤§¶¡¤£»İ¹j¶})(%s[0-9A-Z]+)¡G ", state[i], remindConvergenceFlag==0?"":"(and|or)?") ;			//_´¿¥X²{D_AND©ÎD_OR, ·s¼W«eºó¿ï¶µ¥i¨Ñ¿é¤J
 		scanf("%s", translationTo) ;
-		char divergenceType[4]={} ;			//_ç”¨ä¾†è¨˜éŒ„æ˜¯D_ANDæˆ–D_OR
+		char divergenceType[4]={} ;			//_¥Î¨Ó°O¿ı¬OD_AND©ÎD_OR
 		if(strlen(translationTo)>1){
-			if(strncmp(translationTo, "and", 3)!=0 && strncmp(translationTo, "or", 2)!=0){			//_ç„¡and/orå‰ç¶´
-				if(remindConvergenceFlag==0){			//_ç¬¬ä¸€æ¬¡å‡ºç¾D_ANDæˆ–D_ORæ™‚, æé†’ä½¿ç”¨è€…
-					printf("\nï¼Šï¼Šï¼Š æƒ³è¦Convergenceæ™‚è«‹åœ¨è½‰ç§»ç‹€æ…‹åŠ ä¸Šand/orå‰ç¶´(ex:or5æœƒC_ORåˆ°G5)\n\n") ;
+			if(strncmp(translationTo, "and", 3)!=0 && strncmp(translationTo, "or", 2)!=0){			//_µLand/or«eºó
+				if(remindConvergenceFlag==0){			//_²Ä¤@¦¸¥X²{D_AND©ÎD_OR®É, ´£¿ô¨Ï¥ÎªÌ
+					printf("\n¡¯¡¯¡¯ ·Q­nConvergence®É½Ğ¦bÂà²¾ª¬ºA¥[¤Wand/or«eºó(ex:or5·|C_OR¨ìG5)\n\n") ;
 					remindConvergenceFlag=1 ;
 				}
-				printf("G%c Divergenceåˆ°å¤šå€‹ç‹€æ…‹æ˜¯D_ANDé‚„æ˜¯D_ORï¼Ÿ(and|or)ï¼š ", state[i]) ;
+				printf("G%c Divergence¨ì¦h­Óª¬ºA¬OD_ANDÁÙ¬OD_OR¡H(and|or)¡G ", state[i]) ;
 				scanf("%s", divergenceType) ;
 			}}
 		
-		//---D_AND:Giç™¼æ•£è‡³å¤šå€‹Gn
+		//---D_AND:Giµo´²¦Ü¦h­ÓGn
 		if(strcmp(divergenceType, "and")==0){
 			currentType=D_AND ;
 			if(currentType!=previousType){
@@ -164,18 +164,18 @@ static void genGrafcet(){
 			fprintf(fptC, "(x%c==1", state[i]) ;
 			if(howManyStateOfSubGrafcet[i]!=0){//^
 				fprintf(fptC, "&&x%c%c==1", state[i], state[howManyStateOfSubGrafcet[i]-1]) ;}
-			fprintf(fptC, "/*&& (|__D-AND__G%câ†’", state[i]) ;
+			fprintf(fptC, "/*&& (|__D-AND__G%c¡÷", state[i]) ;
 			for(int j=0; j<strlen(translationTo); ++j){		//_Gi->Gns...
 				fprintf(fptC, "G%c%s", translationTo[j], j==strlen(translationTo)-1?"":",") ;}
-			fprintf(fptC, "å…¶ä»–æ¢ä»¶__|)*/){x%c=0; ", state[i]) ;
+			fprintf(fptC, "¨ä¥L±ø¥ó__|)*/){x%c=0; ", state[i]) ;
 			if(howManyStateOfSubGrafcet[i]!=0){			//^
 				fprintf(fptC, "x%c%c=0; x%c0=1; ", state[i], state[howManyStateOfSubGrafcet[i]-1], state[i]) ;}
 			for(int j=0; j<strlen(translationTo); ++j){			//_{xi=0, xns=1...}
 				fprintf(fptC, "x%c=1%s", translationTo[j], j==strlen(translationTo)-1?" ;":"; ") ;}
-			fprintf(fptC, "%s}%s", i==0?"/*G0åˆå§‹åŒ–å…§å®¹*/":"", EOL) ;
+			fprintf(fptC, "%s}%s", i==0?"/*G0ªì©l¤Æ¤º®e*/":"", EOL) ;
 		}
 		
-		//---D_OR:Giç™¼æ•£è‡³å¤šå€‹Gns
+		//---D_OR:Giµo´²¦Ü¦h­ÓGns
 		else if(strcmp(divergenceType, "or")==0){
 			currentType=D_OR ;
 			if(currentType!=previousType){
@@ -185,14 +185,14 @@ static void genGrafcet(){
 				fprintf(fptC, "(x%c==1", state[i]) ;
 				if(howManyStateOfSubGrafcet[i]!=0){//^
 					fprintf(fptC, "&&x%c%c==1", state[i], state[howManyStateOfSubGrafcet[i]-1]) ;}
-				fprintf(fptC, "/*&& (|__D-OR__G%câ†’G%cå…¶ä»–æ¢ä»¶__|)*/){x%c=0; ", state[i], translationTo[j], state[i]) ;
+				fprintf(fptC, "/*&& (|__D-OR__G%c¡÷G%c¨ä¥L±ø¥ó__|)*/){x%c=0; ", state[i], translationTo[j], state[i]) ;
 				if(howManyStateOfSubGrafcet[i]!=0){			//^
 					fprintf(fptC, "x%c%c=0; x%c0=1; ", state[i], state[howManyStateOfSubGrafcet[i]-1], state[i]) ;}
-				fprintf(fptC, "x%c=1 ;%s}%s", translationTo[j], i==0?"/*G0åˆå§‹åŒ–å…§å®¹*/":"", EOL) ;			//_[{xi=0; xj=1}]*t
+				fprintf(fptC, "x%c=1 ;%s}%s", translationTo[j], i==0?"/*G0ªì©l¤Æ¤º®e*/":"", EOL) ;			//_[{xi=0; xj=1}]*t
 			}
 		}
 		
-		//---C_OR:å¤šå€‹Gnsæ”¶æ–‚è‡³Gi
+		//---C_OR:¦h­ÓGns¦¬ÀÄ¦ÜGi
 		else if(remindConvergenceFlag==1 && strncmp(translationTo, "or", 2)==0){			//_if(xj==1)
 			currentType=C_OR ;
 			if(currentType!=previousType){
@@ -201,19 +201,19 @@ static void genGrafcet(){
 			fprintf(fptC, "(x%c==1", state[i]) ;
 			if(howManyStateOfSubGrafcet[i]!=0){//^
 				fprintf(fptC, "&&x%c%c==1", state[i], state[howManyStateOfSubGrafcet[i]-1]) ;}
-			fprintf(fptC, "/*&& (|__C-OR__G%câ†’G%cå…¶ä»–æ¢ä»¶__|)*/){x%c=0; ", state[i], translationTo[2], state[i]) ;
+			fprintf(fptC, "/*&& (|__C-OR__G%c¡÷G%c¨ä¥L±ø¥ó__|)*/){x%c=0; ", state[i], translationTo[2], state[i]) ;
 			if(howManyStateOfSubGrafcet[i]!=0){			//^
 				fprintf(fptC, "x%c%c=0; x%c0=1; ", state[i], state[howManyStateOfSubGrafcet[i]-1], state[i]) ;}
-			fprintf(fptC, "x%c=1 ;%s}%s", translationTo[2], i==0?"/*G0åˆå§‹åŒ–å…§å®¹*/":"", EOL) ;			//_{xj=0, xi=1}
+			fprintf(fptC, "x%c=1 ;%s}%s", translationTo[2], i==0?"/*G0ªì©l¤Æ¤º®e*/":"", EOL) ;			//_{xj=0, xi=1}
 		}
 		
-		//---ç´€éŒ„C_AND:(åƒ…å»ºè¡¨)å¤šå€‹Gnsæ”¶æ–‚è‡³Gi
+		//---¬ö¿ıC_AND:(¶È«Øªí)¦h­ÓGns¦¬ÀÄ¦ÜGi
 		else if(remindConvergenceFlag==1 && strncmp(translationTo, "and", 3)==0){
-			int indexOfTranslation=translationTo[3]<='9'?translationTo[3]-'0':translationTo[3]-'A'+10 ;			//_æŠŠè½‰ç§»ç›®æ¨™çš„stateæ›æˆç·¨è™Ÿ
-			cAndList[indexOfTranslation][strlen(cAndList[indexOfTranslation])]=state[i] ;			//_Giæ”¶æ–‚åˆ°Gk, ç´€éŒ„åœ¨Gkçš„è¡¨ä¸­, æœ€å¾ŒGkçš„è¡¨æœƒç´€éŒ„æœ‰ç‹€æ…‹Gi,Gns...æ”¶æ–‚åˆ°ä»–
+			int indexOfTranslation=translationTo[3]<='9'?translationTo[3]-'0':translationTo[3]-'A'+10 ;			//_§âÂà²¾¥Ø¼Ğªºstate´«¦¨½s¸¹
+			cAndList[indexOfTranslation][strlen(cAndList[indexOfTranslation])]=state[i] ;			//_Gi¦¬ÀÄ¨ìGk, ¬ö¿ı¦bGkªºªí¤¤, ³Ì«áGkªºªí·|¬ö¿ı¦³ª¬ºAGi,Gns...¦¬ÀÄ¨ì¥L
 		}
 		
-		//---SINGLE:æ™®é€šçš„å–®ç·šè½‰ç§»Gi->Gj
+		//---SINGLE:´¶³qªº³æ½uÂà²¾Gi->Gj
 		else{			//_if(xi==1)
 			currentType=SINGLE ;
 			if(currentType!=previousType){
@@ -222,16 +222,16 @@ static void genGrafcet(){
 			fprintf(fptC, "(x%c==1", state[i]) ;
 			if(howManyStateOfSubGrafcet[i]!=0){//^
 				fprintf(fptC, "&&x%c%c==1", state[i], state[howManyStateOfSubGrafcet[i]-1]) ;}
-			fprintf(fptC, "/*&& (|__SINGLE__G%câ†’G%cå…¶ä»–æ¢ä»¶__|)*/){x%c=0; ", state[i], translationTo[0], state[i]) ;
+			fprintf(fptC, "/*&& (|__SINGLE__G%c¡÷G%c¨ä¥L±ø¥ó__|)*/){x%c=0; ", state[i], translationTo[0], state[i]) ;
 			if(howManyStateOfSubGrafcet[i]!=0){			//^
 				fprintf(fptC, "x%c%c=0; x%c0=1; ", state[i], state[howManyStateOfSubGrafcet[i]-1], state[i]) ;}
-			fprintf(fptC, "x%c=1 ;%s}%s", translationTo[0], i==0?"/*G0åˆå§‹åŒ–å…§å®¹*/":"", EOL) ;			//_{xi=0, xj=1}
+			fprintf(fptC, "x%c=1 ;%s}%s", translationTo[0], i==0?"/*G0ªì©l¤Æ¤º®e*/":"", EOL) ;			//_{xi=0, xj=1}
 		}
 		previousType=currentType ;
 	}
 	
-	//---ç‰¹æ®ŠC_AND:(Gnså›åˆ°G0(n>0))å¤šå€‹Gnsæ”¶æ–‚è‡³G0
-	if(strlen(cAndList[0])!=0){//^			//_é‡åšä¸€æ¬¡C_AND, listIndex=0
+	//---¯S®íC_AND:(Gns¦^¨ìG0(n>0))¦h­ÓGns¦¬ÀÄ¦ÜG0
+	if(strlen(cAndList[0])!=0){//^			//_­«°µ¤@¦¸C_AND, listIndex=0
 		currentType=C_AND ;
 		if(currentType!=previousType){
 			fprintf(fptC, "%s/**%s**/%s", EOL, tType[currentType], EOL) ;}			//`^
@@ -243,13 +243,13 @@ static void genGrafcet(){
 				fprintf(fptC, "%sx%c%c==1%s", i==strlen(cAndList[0])-1?"&&":"", state[indexOfCAndList], state[howManyStateOfSubGrafcet[indexOfCAndList]-1], i==strlen(cAndList[0])-1?"":"&&") ;}
 		}
 		fprintf(fptC, "/*&& (|__C-AND__") ;
-		printf("ï¼ŠC_ANDï¼š") ;
+		printf("¡¯C_AND¡G") ;
 		for(int i=0; i<strlen(cAndList[0]); ++i){
 			fprintf(fptC, "G%c%s", cAndList[0][i], i==strlen(cAndList[0])-1?"":",") ;
 			printf("G%c%s", cAndList[0][i], i==strlen(cAndList[0])-1?"":",") ;
 		}
-		fprintf(fptC, "â†’G0å…¶ä»–æ¢ä»¶__|)*/){") ;
-		printf("æ”¶æ–‚åˆ°G0\n") ;
+		fprintf(fptC, "¡÷G0¨ä¥L±ø¥ó__|)*/){") ;
+		printf("¦¬ÀÄ¨ìG0\n") ;
 		for(int i=0; i<strlen(cAndList[0]); ++i){
 			fprintf(fptC, "x%c=0; ", cAndList[0][i]) ;
 			int indexOfCAndList=(cAndList[0][i]<='9'?cAndList[0][i]-'0':cAndList[0][i]-'A'+10) ;
@@ -259,44 +259,44 @@ static void genGrafcet(){
 		fprintf(fptC, "x0=1 ;}%s", EOL) ;
 	}
 	
-	//***è¼¸å‡ºç‹€æ…‹ç”¨â‡©
-	fprintf(fptC, "//***è¼¸å‡ºç‹€æ…‹ç”¨â‡©%s\tstateCheck() ;%s//***è¼¸å‡ºç‹€æ…‹ç”¨â‡§", EOL, EOL) ;
-	//***è¼¸å‡ºç‹€æ…‹ç”¨â‡§
+	//***¿é¥Xª¬ºA¥Î¡õ
+	fprintf(fptC, "//***¿é¥Xª¬ºA¥Î¡õ%s\tstateCheck() ;%s//***¿é¥Xª¬ºA¥Î¡ô", EOL, EOL) ;
+	//***¿é¥Xª¬ºA¥Î¡ô
 	
-	//---ç”¢ç”ŸActionFunctionCall
+	//---²£¥ÍActionFunctionCall
 	fprintf(fptC, "%s\taction0() ;%s}", EOL, EOL) ;
 }
 
 static void genAction() {
-	//---ç”¢ç”Ÿaction()
+	//---²£¥Íaction()
 	fprintf(fptC, "%s%s", EOL, EOL) ;
 	fprintf(fptC, "static void action0(){%s", EOL) ;
 	for(int i=1; i<howManyGrafcet; ++i){
 		fprintf(fptC, "\tif(x%c==1){", state[i]) ;
-		if(howManyStateOfSubGrafcet[i]!=0){			//_å‘¼å«subGrafcet
+		if(howManyStateOfSubGrafcet[i]!=0){			//_©I¥ssubGrafcet
 			fprintf(fptC, "grafcet%c() ;", state[i]) ;}
 		else{
-			fprintf(fptC, "/*|__G%cå‹•ä½œ__|*/", state[i]) ;}
+			fprintf(fptC, "/*|__G%c°Ê§@__|*/", state[i]) ;}
 		fprintf(fptC, "}%s", EOL) ;
 	}
 	fprintf(fptC, "}") ;
 }
 
-//***è¼¸å‡ºç‹€æ…‹ç”¨â‡©
+//***¿é¥Xª¬ºA¥Î¡õ
 static void genStateCheck(const char* EOLorEMPTY){
-	//---ç”¢ç”ŸstateCheck()
-	unsigned char eolFlag=!strcmp(EOLorEMPTY, EOL) ;			//_ç´€éŒ„æ›è¡Œèˆ‡å¦
+	//---²£¥ÍstateCheck()
+	unsigned char eolFlag=!strcmp(EOLorEMPTY, EOL) ;			//_¬ö¿ı´«¦æ»P§_
 	fprintf(fptC, "%s%s", EOL, EOL) ;
-	fprintf(fptC, "//***è¼¸å‡ºç‹€æ…‹ç”¨â‡©%sstatic void stateCheck(){%s\tprintf(\"ï¼ŠG0ç‹€æ…‹ï¼š _\") ;%s", EOL, EOL, EOL) ;
-	for(int i=0; i<howManyGrafcet; ++i){			//_G0å„ç‹€æ…‹
-		if(eolFlag==1 || i==0){			//_(ç¬¬ä¸€è¡Œ/ä¸æ›è¡Œæ™‚å„ifä¹‹é–“)çš„ç©ºç™½
+	fprintf(fptC, "//***¿é¥Xª¬ºA¥Î¡õ%sstatic void stateCheck(){%s\tprintf(\"¡¯G0ª¬ºA¡G _\") ;%s", EOL, EOL, EOL) ;
+	for(int i=0; i<howManyGrafcet; ++i){			//_G0¦Uª¬ºA
+		if(eolFlag==1 || i==0){			//_(²Ä¤@¦æ/¤£´«¦æ®É¦Uif¤§¶¡)ªºªÅ¥Õ
 			fprintf(fptC, "\t") ;}
 		fprintf(fptC, "if(x%c==1){printf(\"_x%c_\") ;}%s", state[i], state[i], EOLorEMPTY) ;
 	}
-	fprintf(fptC, "%s", EOL);			//_æ¯ä¸€çµ„ä¹‹é–“æ›è¡Œ
-	for(int i=0; i<strlen(subGrafcetList); ++i){		//_subGrafcetå„ç‹€æ…‹
+	fprintf(fptC, "%s", EOL);			//_¨C¤@²Õ¤§¶¡´«¦æ
+	for(int i=0; i<strlen(subGrafcetList); ++i){		//_subGrafcet¦Uª¬ºA
 		if(eolFlag==0){
-			fprintf(fptC, "\t") ;}		//_æ›è¡Œæ™‚çš„ç©ºç™½
+			fprintf(fptC, "\t") ;}		//_´«¦æ®ÉªºªÅ¥Õ
 		int numOfSG=subGrafcetList[i]<='9'?subGrafcetList[i]-'0':subGrafcetList[i]-'A'+10 ;
 		for(int j=0; j<howManyStateOfSubGrafcet[numOfSG]; ++j){
 			if(eolFlag==1){
@@ -306,7 +306,7 @@ static void genStateCheck(const char* EOLorEMPTY){
 		fprintf(fptC, "%s", EOL) ;
 	}
 	if(eolFlag==1){
-		fseek(fptC, -(strlen(EOL)), SEEK_END) ;}		//_ç§»é™¤å¤šé¤˜çš„ç©ºç™½è¡Œ
-	fprintf(fptC, "\tprintf(\"_\\n\") ;%s}%s//***è¼¸å‡ºç‹€æ…‹ç”¨â‡§", EOL, EOL) ;
+		fseek(fptC, -(strlen(EOL)), SEEK_END) ;}		//_²¾°£¦h¾lªºªÅ¥Õ¦æ
+	fprintf(fptC, "\tprintf(\"_\\n\") ;%s}%s//***¿é¥Xª¬ºA¥Î¡ô", EOL, EOL) ;
 }
-//***è¼¸å‡ºç‹€æ…‹ç”¨â‡§
+//***¿é¥Xª¬ºA¥Î¡ô

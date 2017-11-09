@@ -3,7 +3,7 @@
 //  generateGrafcetCcode
 //
 //  Created by LouisSung on 2017/11/1.
-//  Copyright © 2017年 LS. All rights reserved.
+//  Copyright c 2017�~ LS. All rights reserved.
 //
 
 #ifndef drawGrafcet0_h

@@ -3,22 +3,24 @@
 //  generateGrafcetCcode
 //
 //  Created by LouisSung on 2017/11/1.
-//  Copyright Â© 2017å¹´ LS. All rights reserved.
+//  Copyright c 2017¦~ LS. All rights reserved.
 //
 
 #include <stdio.h>
-#include "generateGrafcet0.h"
-#include "generateSubGrafcet.h"
-const char* EOL="\r\n" ;
+#include <stdlib.h>
+#include "generateGrafcet0_BIG5.h"
+#include "generateSubGrafcet_BIG5.h"
+const char* EOL="\n" ;
 const char outputPath[]="" ;
-char grafcetID[5+1] ;			//_Grafcetæœ€æ·±å±¤æ•¸(5å±¤)+1
+char grafcetID[5+1] ;			//_Grafcet³Ì²`¼h¼Æ(5¼h)+1
 
 int main(int argc, const char * argv[]) {
-	printf("è¦è£½ä½œçš„Grafcetç·¨è™Ÿ(0 | [1-9A-Z][0-9A-Z]*)ï¼š ") ;
+	printf("­n»s§@ªºGrafcet½s¸¹(0 | [1-9A-Z][0-9A-Z]*)¡G ") ;
 	scanf("%s", grafcetID) ;
 	if(grafcetID[0]=='0'){
 		generateGrafcet0() ;}
 	else{
 		generateSubGrafcet() ;}
+	system("pause") ;
 	return 0 ;
 }
