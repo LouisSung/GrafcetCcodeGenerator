@@ -67,6 +67,21 @@ Grafcet有很多眉角需要留意
 ---
 
 ```
+新增可執行檔：  
+編譯環境與source code編碼：  
+Windows_10 with MinGW (BIG5)  
+Ubuntu_16.04 with GCC (UTF-8)  
+macOS_10.13 with GCC (UTF-8)  
+
+編譯指令：  
+> gcc main.c generateGrafcet0.c generateSubGrafcet.c -o GrafcetCcodeGenerator
+
+新增BIG5 source code(日後不會再更新 請自行修改編碼)
+```
+
+---
+
+```
 註：  
 可以自行修改實作的部分  
 - main.c  
