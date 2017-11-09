@@ -1,4 +1,4 @@
-//
+//  ฅ• ω •ฅ 喵~
 //  generateGrafcet0.c
 //  generateGrafcetCcode
 //
@@ -151,7 +151,7 @@ static void genGrafcet(){
 					printf("\n＊＊＊ 想要Convergence時請在轉移狀態加上and/or前綴(ex:or5會C_OR到G5)\n\n") ;
 					remindConvergenceFlag=1 ;
 				}
-				printf("G%cDivergence到多個狀態是D_AND還是D_OR？(and|or)： ", state[i]) ;
+				printf("G%c Divergence到多個狀態是D_AND還是D_OR？(and|or)： ", state[i]) ;
 				scanf("%s", divergenceType) ;
 			}}
 		
