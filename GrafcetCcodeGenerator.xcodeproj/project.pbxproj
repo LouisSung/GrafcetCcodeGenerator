@@ -25,7 +25,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		F09C50EE1FAF563500034DBA /* generateGrafcetCcode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = generateGrafcetCcode; sourceTree = BUILT_PRODUCTS_DIR; };
+		F09C50EE1FAF563500034DBA /* GrafcetCcodeGenerator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GrafcetCcodeGenerator; sourceTree = BUILT_PRODUCTS_DIR; };
 		F09C50F11FAF563500034DBA /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		F09C50F81FAF571900034DBA /* generateGrafcet0.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = generateGrafcet0.h; sourceTree = "<group>"; };
 		F09C50F91FAF571900034DBA /* generateGrafcet0.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = generateGrafcet0.c; sourceTree = "<group>"; };
@@ -47,7 +47,7 @@
 		F09C50E51FAF563400034DBA = {
 			isa = PBXGroup;
 			children = (
-				F09C50F01FAF563500034DBA /* generateGrafcetCcode */,
+				F09C50F01FAF563500034DBA /* GrafcetCcodeGenerator */,
 				F09C50EF1FAF563500034DBA /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,12 +55,12 @@
 		F09C50EF1FAF563500034DBA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F09C50EE1FAF563500034DBA /* generateGrafcetCcode */,
+				F09C50EE1FAF563500034DBA /* GrafcetCcodeGenerator */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F09C50F01FAF563500034DBA /* generateGrafcetCcode */ = {
+		F09C50F01FAF563500034DBA /* GrafcetCcodeGenerator */ = {
 			isa = PBXGroup;
 			children = (
 				F09C50F11FAF563500034DBA /* main.c */,
@@ -69,15 +69,15 @@
 				F09C50F81FAF571900034DBA /* generateGrafcet0.h */,
 				F09C50FB1FAF5A5C00034DBA /* generateSubGrafcet.h */,
 			);
-			path = generateGrafcetCcode;
+			path = GrafcetCcodeGenerator;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F09C50ED1FAF563500034DBA /* generateGrafcetCcode */ = {
+		F09C50ED1FAF563500034DBA /* GrafcetCcodeGenerator */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F09C50F51FAF563500034DBA /* Build configuration list for PBXNativeTarget "generateGrafcetCcode" */;
+			buildConfigurationList = F09C50F51FAF563500034DBA /* Build configuration list for PBXNativeTarget "GrafcetCcodeGenerator" */;
 			buildPhases = (
 				F09C50EA1FAF563500034DBA /* Sources */,
 				F09C50EB1FAF563500034DBA /* Frameworks */,
@@ -87,9 +87,9 @@
 			);
 			dependencies = (
 			);
-			name = generateGrafcetCcode;
-			productName = generateGrafcetCcode;
-			productReference = F09C50EE1FAF563500034DBA /* generateGrafcetCcode */;
+			name = GrafcetCcodeGenerator;
+			productName = GrafcetCcodeGenerator;
+			productReference = F09C50EE1FAF563500034DBA /* GrafcetCcodeGenerator */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
@@ -107,7 +107,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F09C50E91FAF563400034DBA /* Build configuration list for PBXProject "generateGrafcetCcode" */;
+			buildConfigurationList = F09C50E91FAF563400034DBA /* Build configuration list for PBXProject "GrafcetCcodeGenerator" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -119,7 +119,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F09C50ED1FAF563500034DBA /* generateGrafcetCcode */,
+				F09C50ED1FAF563500034DBA /* GrafcetCcodeGenerator */,
 			);
 		};
 /* End PBXProject section */
@@ -260,7 +260,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F09C50E91FAF563400034DBA /* Build configuration list for PBXProject "generateGrafcetCcode" */ = {
+		F09C50E91FAF563400034DBA /* Build configuration list for PBXProject "GrafcetCcodeGenerator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F09C50F31FAF563500034DBA /* Debug */,
@@ -269,7 +269,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F09C50F51FAF563500034DBA /* Build configuration list for PBXNativeTarget "generateGrafcetCcode" */ = {
+		F09C50F51FAF563500034DBA /* Build configuration list for PBXNativeTarget "GrafcetCcodeGenerator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F09C50F61FAF563500034DBA /* Debug */,
