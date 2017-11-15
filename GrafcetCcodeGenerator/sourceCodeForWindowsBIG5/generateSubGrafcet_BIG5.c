@@ -175,7 +175,7 @@ static void genGrafcet(){
 			if(currentType!=previousType){
 				fprintf(fptC, "%s/**%s**/%s", i==0?"":EOL, tType[currentType], EOL) ;}		//`^
 			fprintf(fptC, "\t%s", i==0?"if":"else if") ;		//_if(xi==1)
-			fprintf(fptC, "(x%s%c==1", grafcetID, state[i]) ;
+			fprintf(fptC, "(x%s%c==1%s%s%s", grafcetID, state[i], i==0?"&&x":"", i==0?grafcetID:"", i==0?"==1":"") ;//$
 			if(howManyStateOfSubGrafcet[i]!=0){//^
 				fprintf(fptC, "&&x%s%c%c==1",grafcetID , state[i], state[howManyStateOfSubGrafcet[i]-1]) ;}//$
 			fprintf(fptC, "/*&& (|__D-AND__G%s%c→", grafcetID, state[i]) ;//$
@@ -196,7 +196,7 @@ static void genGrafcet(){
 				fprintf(fptC, "%s/**%s**/%s", i==0?"":EOL, tType[currentType], EOL) ;}			//`^
 			for(int j=0; j<strlen(translationTo); ++j){			//_if(xi==1)
 				fprintf(fptC, "\t%s", i==0&&j==0?"if":"else if") ;			//_[Gi->Gj]*t
-				fprintf(fptC, "(x%s%c==1", grafcetID, state[i]) ;//$
+				fprintf(fptC, "(x%s%c==1%s%s%s", grafcetID, state[i], i==0?"&&x":"", i==0?grafcetID:"", i==0?"==1":"") ;//$
 				if(howManyStateOfSubGrafcet[i]!=0){//^
 					fprintf(fptC, "&&x%s%c%c==1",grafcetID , state[i], state[howManyStateOfSubGrafcet[i]-1]) ;}//$
 				fprintf(fptC, "/*&& (|__D-OR__G%s%c→G%s%c其他條件__|)*/){x%s%c=0; ", grafcetID, state[i], grafcetID, translationTo[j], grafcetID, state[i]) ;//$
@@ -237,7 +237,7 @@ static void genGrafcet(){
 			if(currentType!=previousType){
 				fprintf(fptC, "%s/**%s**/%s", i==0?"":EOL, tType[currentType], EOL) ;}			//`^
 			fprintf(fptC, "\t%s", i==0?"if":"else if") ;		//_Gi->Gj
-			fprintf(fptC, "(x%s%c==1", grafcetID, state[i]) ;//$
+			fprintf(fptC, "(x%s%c==1%s%s%s", grafcetID, state[i], i==0?"&&x":"", i==0?grafcetID:"", i==0?"==1":"") ;//$
 			if(howManyStateOfSubGrafcet[i]!=0){//^
 				fprintf(fptC, "&&x%s%c%c==1",grafcetID , state[i], state[howManyStateOfSubGrafcet[i]-1]) ;}//$
 			fprintf(fptC, "/*&& (|__SINGLE__G%s%c→G%s%c其他條件__|)*/){x%s%c=0; ", grafcetID, state[i], grafcetID, translationTo[0], grafcetID, state[i]) ;//$
