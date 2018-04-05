@@ -76,7 +76,8 @@ macOS_10.13 with GCC (UTF-8)
 編譯指令：  
 > gcc main.c generateGrafcet0.c generateSubGrafcet.c -o GrafcetCcodeGenerator
 
-新增BIG5 source code(日後不會再更新 請自行修改編碼)
+新增BIG5 source code(日後不會再更新 請自行修改編碼)  
+新增simpleGCG, 產生出來的Grafcet註解較少, 可減少刪除與修改的時間
 ```
 
 ---
